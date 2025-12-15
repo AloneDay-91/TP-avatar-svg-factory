@@ -89,6 +89,7 @@ Pour qu'une PR soit acceptée et mergée, elle doit respecter les règles suivan
 - Noheila
 - Theo
 - Mathias
+- Paul
 
 ### DevOps
 
