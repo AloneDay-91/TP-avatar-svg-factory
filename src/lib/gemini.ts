@@ -9,102 +9,70 @@ const MODELS_TO_TRY = [
 export async function generateAvatarSVG(apiKey: string): Promise<string> {
   const genAI = new GoogleGenerativeAI(apiKey);
 
-  const prompt = `Generate a Minecraft-style blocky avatar in SVG format. Follow this EXACT pixelated, cubic style:
+  const prompt = `Act as a Creative Front-End Developer.
 
-REQUIRED STYLE - Use this template as reference (Minecraft blocky aesthetic):
-<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background (grass or sky) -->
-  <rect width="400" height="400" fill="#87CEEB"/>
+Task: Generate the raw XML code for a valid SVG file representing a "Minimalist Geometric Cat Avatar".
 
-  <!-- Head (cubic, no rounded edges) -->
-  <rect x="140" y="100" width="120" height="120" fill="#D2B48C" stroke="#000" stroke-width="2"/>
-  <!-- Hair/Hat layer (blocky) -->
-  <rect x="135" y="95" width="130" height="60" fill="#8B4513" stroke="#000" stroke-width="2"/>
+IMPORTANT: you're NOT allowed to use "http://www.w3.org/2000/svg" or any xmlns link in the SVG tag.
 
-  <!-- Eyes (pixelated, square) -->
-  <rect x="160" y="145" width="20" height="20" fill="#4169E1"/>
-  <rect x="220" y="145" width="20" height="20" fill="#4169E1"/>
-  <!-- Pupils -->
-  <rect x="165" y="150" width="10" height="10" fill="#000"/>
-  <rect x="225" y="150" width="10" height="10" fill="#000"/>
-  <!-- Eye highlights -->
-  <rect x="172" y="152" width="4" height="4" fill="#FFF"/>
-  <rect x="232" y="152" width="4" height="4" fill="#FFF"/>
+Design Constraints (Strictly follow these):
+1. Format: Output ONLY valid SVG XML code. No markdown, no explanations, no code blocks.
+2. Canvas: viewBox="0 0 512 512"
+3. Style: Neo-Memphis / Abstract Flat Design. Ultra-simplistic.
+4. Shapes: Use ONLY basic primitives: <circle>, <rect>, <ellipse>, <polygon>. Do NOT use complex <path> data.
 
-  <!-- Nose (small block) -->
-  <rect x="190" y="170" width="20" height="15" fill="#C19A6B" stroke="#000" stroke-width="1"/>
+5. Composition Structure:
+   - Background: A solid <rect> covering the whole canvas (512x512) with a random soft pastel color
+   - Head: A large <circle> centered in the middle (cx="256" cy="256" r="140-160")
+   - Ears: Two simple shapes on top of the head - RANDOMIZE between:
+     * Triangular ears: <polygon points="..." /> (pointing up)
+     * Rectangular ears: <rect /> (standing up)
+   - Eyes: Two elements positioned on the face - RANDOMIZE shape between:
+     * Circles: <circle />
+     * Triangles: <polygon />
+     * Horizontal rectangles: <rect />
+   - Nose: A tiny shape centered below eyes - use <polygon> (inverted triangle) or <circle>
+   - Mustaches: Simple <rect> elements on EACH side of the face
+     * RANDOMIZE quantity: 2 to 4 mustaches per side (so 4 to 8 total)
+     * Place them horizontally extending from the face sides
 
-  <!-- Mouth (pixelated line) -->
-  <rect x="170" y="195" width="60" height="5" fill="#000"/>
+6. CRITICAL Randomization Rules - YOU MUST vary these for EVERY request:
+   - Fur color (head + ears): Pick ONE random hex color from soft pastels or natural fur tones
+     Examples: #FFB347, #FFDAB9, #E8C5B5, #D2B48C, #C0C0C0, #696969, #2F4F4F, etc.
+   - Mustache color: Pick ONE random hex color (can be darker or contrasting)
+     Examples: #000000, #333333, #8B4513, #A0522D, #CD853F, etc.
+   - Background color: Pick ONE random soft pastel hex color
+     Examples: #FFE4E1, #F0E68C, #E0BBE4, #B0E0E6, #DDA0DD, #FFDEAD, etc.
+   - Eye color: Pick ONE random hex color
+     Examples: #4169E1, #32CD32, #FFD700, #FF6347, #8A2BE2, etc.
+   - Ear shape: Randomly choose triangle OR rectangle
+   - Eye shape: Randomly choose circle, triangle, OR horizontal rectangle
+   - Mustache count per side: Randomly choose 2, 3, or 4
 
-  <!-- Body (rectangular, blocky) -->
-  <rect x="140" y="230" width="120" height="100" fill="#FF6347" stroke="#000" stroke-width="2"/>
-  <!-- Shirt details (pixelated) -->
-  <rect x="155" y="245" width="90" height="10" fill="#DC143C"/>
+7. Positioning Guidelines:
+   - Ears: Top of head circle, symmetrically placed
+   - Eyes: Upper-middle area of the face, horizontally aligned
+   - Nose: Center, below eyes
+   - Mustaches: Extend horizontally from left and right sides of the face circle
 
-  <!-- Arms (thin rectangles) -->
-  <rect x="100" y="235" width="35" height="90" fill="#D2B48C" stroke="#000" stroke-width="2"/>
-  <rect x="265" y="235" width="35" height="90" fill="#D2B48C" stroke="#000" stroke-width="2"/>
+IMPORTANT OUTPUT RULES:
+- Return ONLY the raw SVG code
+- Start with: <svg viewBox="0 0 512 512">
+- DO NOT include: xmlns="http://www.w3.org/2000/svg" or any namespace declarations
+- End with: </svg>
+- NO markdown formatting, NO code fences, NO explanations
+- The output must be directly usable XML
 
-  <!-- Legs (blocky) -->
-  <rect x="160" y="335" width="30" height="65" fill="#0000CD" stroke="#000" stroke-width="2"/>
-  <rect x="210" y="335" width="30" height="65" fill="#0000CD" stroke="#000" stroke-width="2"/>
-
-  <!-- Shoes (dark blocks) -->
-  <rect x="160" y="385" width="30" height="15" fill="#333" stroke="#000" stroke-width="2"/>
-  <rect x="210" y="385" width="30" height="15" fill="#333" stroke="#000" stroke-width="2"/>
-</svg>
-
-VARIATIONS - Randomize these (keep blocky/pixelated style):
-1. SKIN COLOR (use ONE - blocky, no gradients):
-   #D2B48C (tan), #F5DEB3 (wheat), #FFDAB9 (peach), #E3BC9A (beige),
-   #8B7355 (brown), #654321 (dark brown), #2E1A0F (very dark)
-
-2. HAIR/HAT COLOR (use ONE):
-   #000000 (black), #2C1608 (very dark brown), #8B4513 (saddle brown), #CD853F (peru),
-   #DAA520 (goldenrod), #F4A460 (sandy brown), #FF8C00 (dark orange), #B22222 (brick red),
-   #708090 (slate gray), #4169E1 (royal blue - for dyed hair)
-
-3. HAIR/HAT STYLE (choose ONE, always blocky):
-   - Short blocky hair: <rect x="135" y="95" width="130" height="60" fill="HAIRCOLOR" stroke="#000" stroke-width="2"/>
-   - Blocky hat: <rect x="130" y="85" width="140" height="70" fill="HAIRCOLOR" stroke="#000" stroke-width="2"/>
-                 <rect x="125" y="140" width="150" height="15" fill="HAIRCOLOR" stroke="#000" stroke-width="2"/>
-   - Pixelated helmet: <rect x="130" y="90" width="140" height="130" fill="HAIRCOLOR" opacity="0.3" stroke="#000" stroke-width="3"/>
-   - Headband: <rect x="135" y="120" width="130" height="20" fill="HAIRCOLOR" stroke="#000" stroke-width="2"/>
-   - No hair/Bald: (nothing extra)
-
-4. CLOTHES COLOR (use ONE - bright, saturated like Minecraft):
-   #FF6347 (tomato red), #32CD32 (lime green), #1E90FF (dodger blue), #FFD700 (gold),
-   #FF1493 (deep pink), #00CED1 (dark turquoise), #9370DB (medium purple), #FF4500 (orange red)
-
-5. EYE COLOR (use ONE - always blocky squares):
-   #0000FF (blue), #00FF00 (green), #8B4513 (brown), #808080 (gray), #FF00FF (magenta - ender eyes)
-
-6. ACCESSORIES (30% chance add ONE):
-   - Pixelated glasses: <rect x="145" y="140" width="45" height="30" fill="none" stroke="#000" stroke-width="4"/>
-                        <rect x="210" y="140" width="45" height="30" fill="none" stroke="#000" stroke-width="4"/>
-                        <rect x="190" y="152" width="20" height="4" fill="#000"/>
-   - Headphones: <rect x="120" y="130" width="15" height="40" fill="#333" stroke="#000" stroke-width="2"/>
-                 <rect x="265" y="130" width="15" height="40" fill="#333" stroke="#000" stroke-width="2"/>
-
-7. FACIAL HAIR (20% chance add blocky beard):
-   <rect x="160" y="200" width="80" height="25" fill="HAIRCOLOR" stroke="#000" stroke-width="1"/>
-   <rect x="165" y="220" width="70" height="15" fill="HAIRCOLOR" stroke="#000" stroke-width="1"/>
-
-8. MOUTH EXPRESSION (choose ONE, always pixelated):
-   - Smile: <rect x="170" y="195" width="10" height="5" fill="#000"/>
-            <rect x="180" y="192" width="40" height="5" fill="#000"/>
-            <rect x="220" y="195" width="10" height="5" fill="#000"/>
-   - Neutral: <rect x="170" y="195" width="60" height="5" fill="#000"/>
-   - Surprised: <rect x="185" y="190" width="30" height="20" fill="#000"/>
-
-IMPORTANT:
-- NO rounded corners (rx="0" always or omit rx entirely)
-- NO circles or ellipses - only rectangles
-- Use stark, bold colors typical of Minecraft
-- All edges must be sharp and blocky
-- Keep pixelated aesthetic throughout
-- Return ONLY the complete SVG code, nothing else`;
+Example structure (DO NOT copy colors/values, RANDOMIZE everything):
+<svg viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#RandomBgColor"/>
+  <circle cx="256" cy="256" r="150" fill="#RandomFurColor"/>
+  <!-- Random ear shapes here -->
+  <!-- Random eye shapes here -->
+  <!-- Nose here -->
+  <!-- 2-4 mustaches on left side -->
+  <!-- 2-4 mustaches on right side -->
+</svg>`;
 
   let lastError: Error | null = null;
 
