@@ -85,13 +85,13 @@ import background from '../assets/background.svg';
 		display: flex;
 		align-items: center;
 		padding: 10px 12px;
-		color: #111827;
+		color: var(--astro-link-color);
 		text-decoration: none;
 		transition: color 0.2s;
 	}
 
 	#links a:hover {
-		color: rgb(78, 80, 86);
+		color: var(--astro-link-hover-color);
 	}
 
 	#links a svg {
@@ -100,8 +100,8 @@ import background from '../assets/background.svg';
 	}
 
 	#links a.button {
-		color: white;
-		background: linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
+		color: var(--primary-foreground);
+		background: var(--astro-button-gradient);
 		box-shadow:
 			inset 0 0 0 1px rgba(255, 255, 255, 0.12),
 			inset 0 -2px 0 rgba(0, 0, 0, 0.24);
@@ -109,7 +109,7 @@ import background from '../assets/background.svg';
 	}
 
 	#links a.button:hover {
-		color: rgb(230, 230, 230);
+		color: var(--astro-button-text-hover-color);
 		box-shadow: none;
 	}
 
@@ -118,7 +118,7 @@ import background from '../assets/background.svg';
 			ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono',
 			monospace;
 		font-weight: normal;
-		background: linear-gradient(14deg, #d83333 0%, #f041ff 100%);
+		background: var(--astro-pre-gradient);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
@@ -128,12 +128,12 @@ import background from '../assets/background.svg';
 	h2 {
 		margin: 0 0 1em;
 		font-weight: normal;
-		color: #111827;
+		color: var(--astro-heading-color);
 		font-size: 20px;
 	}
 
 	p {
-		color: #4b5563;
+		color: var(--astro-paragraph-color);
 		font-size: 16px;
 		line-height: 24px;
 		letter-spacing: -0.006em;
@@ -142,9 +142,7 @@ import background from '../assets/background.svg';
 
 	code {
 		display: inline-block;
-		background:
-			linear-gradient(66.77deg, #f3cddd 0%, #f5cee7 100%) padding-box,
-			linear-gradient(155deg, #d83333 0%, #f041ff 18%, #f5cee7 45%) border-box;
+		background: var(--astro-code-background);
 		border-radius: 8px;
 		border: 1px solid transparent;
 		padding: 6px 8px;
@@ -152,9 +150,9 @@ import background from '../assets/background.svg';
 
 	.box {
 		padding: 16px;
-		background: rgba(255, 255, 255, 1);
+		background: var(--astro-box-background);
 		border-radius: 16px;
-		border: 1px solid white;
+		border: 1px solid var(--astro-box-border-color);
 	}
 
 	#news {
@@ -168,7 +166,7 @@ import background from '../assets/background.svg';
 	}
 
 	#news:hover {
-		background: rgba(255, 255, 255, 0.55);
+		background: var(--astro-news-hover-background);
 	}
 
 	@media screen and (max-height: 368px) {
