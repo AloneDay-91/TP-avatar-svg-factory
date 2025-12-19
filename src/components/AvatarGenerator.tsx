@@ -1,4 +1,9 @@
 import { useState, useEffect } from "react";
+import { Layout } from "./Layout";
+import { PageHeader } from "./PageHeader";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Loader2 } from "lucide-react";
 
 interface Avatar {
   svg: string;
@@ -84,55 +89,32 @@ export default function AvatarGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-gray-800 mb-4">
-            Avatar Generator
-          </h1>
-          <p className="text-lg text-gray-600">
-            Generate unique SVG avatars powered by Gemini AI
-          </p>
-        </div>
+    <Layout>
+      <PageHeader
+        title="Cat Avatar Generator"
+        description="Generate unique geometric cat SVG avatars powered by Gemini AI"
+      />
 
-        {/* Main Content */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+      {/* Main Content */}
+      <Card className="mb-8">
+        <CardContent>
           {/* Generate Button */}
-          <div className="text-center mb-8">
-            <button
+          <div className="text-center mb-8 pt-8">
+            <Button
               onClick={generateAvatar}
               disabled={loading}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold px-8 py-4 rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
+              size="lg"
+              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 px-8 py-6 text-base"
             >
               {loading ? (
-                <span className="flex items-center gap-2">
-                  <svg
-                    className="animate-spin h-5 w-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   Generating...
-                </span>
+                </>
               ) : (
                 "Generate Random Avatar"
               )}
-            </button>
+            </Button>
           </div>
 
           {/* Error Message */}
@@ -154,25 +136,28 @@ export default function AvatarGenerator() {
 
               {/* Action Buttons */}
               <div className="flex justify-center gap-4">
-                <button
+                <Button
                   onClick={downloadSvg}
-                  className="bg-green-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-green-700 transition-colors shadow-md hover:shadow-lg"
+                  variant="default"
+                  className="bg-green-600 hover:bg-green-700"
                 >
                   Download SVG
-                </button>
+                </Button>
               </div>
             </div>
           )}
-        </div>
+        </CardContent>
+      </Card>
 
-        {/* History Section */}
-        {history.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
-              Recent Avatars
-            </h2>
+      {/* History Section */}
+      {history.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Avatars</CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-              {history.map((avatar, index) => (
+              {history.map((avatar) => (
                 <button
                   key={avatar.timestamp}
                   onClick={() => loadAvatar(avatar)}
@@ -188,9 +173,9 @@ export default function AvatarGenerator() {
                 </button>
               ))}
             </div>
-          </div>
-        )}
-      </div>
-    </div>
+          </CardContent>
+        </Card>
+      )}
+    </Layout>
   );
 }
