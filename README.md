@@ -23,11 +23,29 @@ Clonez le dépôt et installez les dépendances :
 
 ```bash
 git clone https://github.com/AloneDay-91/TP-avatar-svg-factory.git
-```
-
-```bash
+cd TP-avatar-svg-factory
 npm install
 ```
+
+### Configuration
+
+Créez un fichier `.env` à la racine du projet en copiant `.env.example` :
+
+```bash
+cp .env.example .env
+```
+
+Ensuite, configurez votre clé API Gemini dans le fichier `.env` :
+
+```env
+GEMINI_API_KEY=votre_clé_api_gemini
+```
+
+Pour obtenir une clé API Gemini :
+1. Rendez-vous sur [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Connectez-vous avec votre compte Google
+3. Créez une nouvelle clé API
+4. Copiez-la dans votre fichier `.env`
 
 ### Développement
 
