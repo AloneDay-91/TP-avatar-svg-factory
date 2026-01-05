@@ -1,16 +1,92 @@
 ---
-import Layout from "@/layouts/Layout.astro";
+import AvatarGenerator from '../components/AvatarGenerator';
+import '../styles/global.css';
 import { Button } from "@/components/ui/button";
+import Register from "@/components/Register.astro";
+import Signin from "@/components/Signin.astro";
 ---
 
-<Layout
-  title="Astro + TailwindCSS + Shadcn UI + TypeScript + React + Supabase + Gemini API"
->
-  <div class="grid place-items-center h-screen content-center">
-    <h1 class="text-3xl font-bold underline">
-      Astro + TailwindCSS + Shadcn UI + TypeScript + React + Supabase + Gemini
-      API
-    </h1>
-    <Button variant="default">Button</Button>
-  </div>
-</Layout>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content="Generate unique SVG avatars powered by Gemini AI" />
+		<title>Avatar Generator - AI Powered SVG Avatars</title>
+	</head>
+	<body>
+
+    <div id="main-content">
+        <div class="flex gap-4 mb-4 justify-end p-4">
+            <Button id="show-register-btn" variant="default">Créer un compte</Button>
+            <Button id="show-signin-btn" variant="default">Se connecter</Button>
+        </div>
+		<AvatarGenerator client:only="react" />
+    </div>
+
+    <div id="auth-section" style="display: none;">
+        <button id="close-auth-btn">
+            &larr; Retour à l'accueil
+        </button>
+        <div id="register-view" style="display: none;">
+            <Register />
+        </div>
+        <div id="signin-view" style="display: none;">
+            <Signin />
+        </div>
+    </div>
+
+	</body>
+</html>
+<script>
+    const mainContent = document.getElementById('main-content');
+    const authSection = document.getElementById('auth-section');
+    const registerView = document.getElementById('register-view');
+    const signinView = document.getElementById('signin-view');
+    const showRegisterBtn = document.getElementById('show-register-btn');
+    const showSigninBtn = document.getElementById('show-signin-btn');
+    const closeAuthBtn = document.getElementById('close-auth-btn');
+
+    function showRegister(event) {
+        if (event) event.preventDefault();
+        mainContent.style.display = 'none';
+        authSection.style.display = 'block';
+        registerView.style.display = 'block';
+        signinView.style.display = 'none';
+    }
+
+    function showSignin(event) {
+        if (event) event.preventDefault();
+        mainContent.style.display = 'none';
+        authSection.style.display = 'block';
+        registerView.style.display = 'none';
+        signinView.style.display = 'block';
+    }
+
+    function closeAuth() {
+        authSection.style.display = 'none';
+        mainContent.style.display = 'block';
+    }
+
+    if (showRegisterBtn) showRegisterBtn.addEventListener('click', showRegister);
+    if (showSigninBtn) showSigninBtn.addEventListener('click', showSignin);
+    if (closeAuthBtn) closeAuthBtn.addEventListener('click', closeAuth);
+
+    if (authSection) {
+        authSection.addEventListener('click', (event) => {
+            const target = event.target as HTMLElement;
+            if (target.tagName === 'A') {
+                const href = target.getAttribute('href');
+                if (href === '/register') {
+                    event.preventDefault();
+                    showRegister(event);
+                } else if (href === '/signin') {
+                    event.preventDefault();
+                    showSignin(event);
+                }
+            }
+        });
+    }
+</script>
