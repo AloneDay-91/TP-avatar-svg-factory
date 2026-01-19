@@ -6,7 +6,11 @@ import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://AloneDay-91.github.io",
+  base: "/TP-avatar-svg-factory",
+
   vite: {
+    // @ts-ignore
     plugins: [tailwindcss()],
   },
 

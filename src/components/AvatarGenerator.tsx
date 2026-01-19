@@ -3,7 +3,9 @@ import { Layout } from "./Layout";
 import { PageHeader } from "./PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Image as ImageIcon } from "lucide-react";
+import { supabase } from "@/db/supabase";
+import { saveAvatar } from "@/utils/save-avatar";
 
 interface Avatar {
   svg: string;
@@ -18,6 +20,8 @@ export default function AvatarGenerator() {
   const [history, setHistory] = useState<Avatar[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
+  const [user, setUser] = useState<any>(null);
+  const [saving, setSaving] = useState(false);
 
   // Load history from localStorage on mount
   useEffect(() => {
@@ -29,6 +33,17 @@ export default function AvatarGenerator() {
         console.error("Failed to load history:", e);
       }
     }
+
+    // Check auth state
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   // Save history to localStorage whenever it changes
@@ -84,12 +99,36 @@ export default function AvatarGenerator() {
     URL.revokeObjectURL(url);
   };
 
+  const handleSaveToGallery = async () => {
+    if (!currentSvg || !user) return;
+    setSaving(true);
+    try {
+      await saveAvatar(currentSvg);
+      alert("Avatar saved to gallery!");
+    } catch (err) {
+      console.error("Failed to save avatar:", err);
+      alert("Failed to save avatar.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const loadAvatar = (avatar: Avatar) => {
     setCurrentSvg(avatar.svg);
   };
 
   return (
     <Layout>
+      <div className="flex justify-end mb-4">
+        {user && (
+          <Button asChild variant="outline" className="gap-2">
+            <a href="/gallery">
+              <ImageIcon className="h-4 w-4" />
+              My Gallery
+            </a>
+          </Button>
+        )}
+      </div>
       <PageHeader
         title="Cat Avatar Generator"
         description="Generate unique geometric cat SVG avatars powered by Gemini AI"
@@ -143,6 +182,23 @@ export default function AvatarGenerator() {
                 >
                   Download SVG
                 </Button>
+                {user && (
+                  <Button
+                    onClick={handleSaveToGallery}
+                    disabled={saving}
+                    variant="outline"
+                    className="border-purple-600 text-purple-600 hover:bg-purple-50"
+                  >
+                    {saving ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      "Save to Gallery"
+                    )}
+                  </Button>
+                )}
               </div>
             </div>
           )}
