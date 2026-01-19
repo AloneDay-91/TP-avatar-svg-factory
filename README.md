@@ -39,9 +39,12 @@ Ensuite, configurez votre clé API Gemini dans le fichier `.env` :
 
 ```env
 GEMINI_API_KEY=votre_clé_api_gemini
+PUBLIC_SUPABASE_URL=votre_url_supabase
+PUBLIC_SUPABASE_ANON_KEY=votre_clé_anon_supabase
 ```
 
 Pour obtenir une clé API Gemini :
+
 1. Rendez-vous sur [Google AI Studio](https://aistudio.google.com/app/apikey)
 2. Connectez-vous avec votre compte Google
 3. Créez une nouvelle clé API
